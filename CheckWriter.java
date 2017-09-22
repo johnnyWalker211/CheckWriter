@@ -47,22 +47,27 @@ public class CheckWriter {
 		nextAvailibleSpaceInPlacementTemplate--;
 	}
 	
-	private void compileOutputString(){
+	private String compileOutputString(){
 		int indexOfNumberToBeProcessed = nextAvailibleSpaceInPlacementTemplate + 1;
 		int numberToBeProcessed = Integer.decode(numberPlacementTemplate[0][indexOfNumberToBeProcessed]);
 		
 		String outputString ="";
 		
-		while(indexOfNumberToBeProcessed <= numberPlacementTemplate[0].length){
+		for(int i = indexOfNumberToBeProcessed; i < numberPlacementTemplate[0].length; i++){
+			String englishValueOfNumber = getEnglishValueOfNumber(numberToBeProcessed, getNumberPlacementValue(i));
 			
-			outputString = outputString + 
-						   getEnglishValueOfNumber(numberToBeProcessed, getNumberPlacementValue(indexOfNumberToBeProcessed));
+			if(!englishValueOfNumber.equals("zero")){
+				outputString = outputString + " " + englishValueOfNumber;
+			}
 			
-			if(indexOfNumberToBeProcessed != numberPlacementTemplate[0].length-1){
-				indexOfNumberToBeProcessed++;
+			indexOfNumberToBeProcessed++;
+			
+			if(indexOfNumberToBeProcessed < numberPlacementTemplate[0].length){
 				numberToBeProcessed = Integer.decode(numberPlacementTemplate[0][indexOfNumberToBeProcessed]);
 			}
 		}
+		
+		return outputString;
 	}
 	
 	private String getNumberPlacementValue(int indexOfNumber){
@@ -70,7 +75,10 @@ public class CheckWriter {
 	}
 	
 	private String getEnglishValueOfNumber(int number, String numberPlacement){
-		if(numberPlacement.equals("thousands") || numberPlacement.equals("hundreds")){
+		if(numberPlacement.equals("thousands")){
+			return wordLibraryForTensAndOnes[1][number];
+		}
+		if(numberPlacement.equals("hundreds")){
 			return wordLibraryForTensAndOnes[1][number];
 		}
 		else if(numberPlacement.equals("ones")){
@@ -87,9 +95,16 @@ public class CheckWriter {
 		}
 		
 	}
+	
+	private void printOutputString(String output){
+		System.out.println(output);
+	}
+	
 	public static void main(String [] args){
 		
 		CheckWriter check = new CheckWriter((int)1004);
-		check.compileOutputString();
+		
+		check.printOutputString(check.compileOutputString());
+		
 	}
 }
